@@ -16,6 +16,11 @@
       --line:#e7ebee;--danger:#b42318;--danger-soft:#fee4e2;
       --shadow:0 8px 24px rgba(16,24,40,.08);
     }
+    body.dark{
+      --bg:#101827;--card:#182235;--text:#f8fafc;--muted:#b7c0cc;
+      --line:#2b3a52;--green-soft:#123524;--danger-soft:#3b1e1e;
+      --shadow:0 8px 24px rgba(0,0,0,.22);
+    }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     html,body{margin:0;padding:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text)}
     body{padding-bottom:28px}
@@ -29,32 +34,41 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:16px;margin:12px 0;box-shadow:var(--shadow)}
     .progressLine{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:950}
     .progressLine span:last-child{color:var(--green-dark)}
-    .bar{height:14px;background:#dce4df;border-radius:99px;overflow:hidden}.barFill{height:100%;width:0%;background:var(--green);border-radius:99px;transition:.25s}
+    .bar,.miniBar{height:14px;background:#dce4df;border-radius:99px;overflow:hidden}
+    .miniBar{height:7px;margin-top:9px;background:rgba(111,122,133,.18)}
+    .barFill,.miniFill{height:100%;width:0%;background:var(--green);border-radius:99px;transition:.25s}
     .providerCard{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;border-left:10px solid var(--green)}
-    .providerCard .iconBubble{background:rgba(255,255,255,.65)}
-    .providerHeader{height:8px;border-radius:999px;margin:-4px 0 10px}
-    .providerLeft{display:flex;align-items:center;gap:13px}.iconBubble{width:48px;height:48px;border-radius:16px;background:var(--green-soft);display:flex;align-items:center;justify-content:center;font-size:25px}
+    .providerLeft{display:flex;align-items:center;gap:13px;flex:1}.iconBubble{width:48px;height:48px;border-radius:16px;background:var(--green-soft);display:flex;align-items:center;justify-content:center;font-size:25px}
     .providerName{font-size:20px;font-weight:950}.providerSub{font-size:14px;color:var(--muted);margin-top:2px}.arrow{font-size:30px;color:#a2acb5}
-    .done{background:#f4fff7;border-color:#bde8c9}.done .providerSub{color:#128447;font-weight:800}
+    .done{border-color:#bde8c9}
+    .done .providerSub{color:#128447;font-weight:800}
     button{border:0;border-radius:18px;padding:14px 16px;font-size:17px;font-weight:950}
     .primary{background:var(--green);color:white;width:100%;box-shadow:0 8px 18px rgba(31,157,85,.22)}
-    .dark{background:#17212b;color:white;width:100%}.danger{background:var(--danger-soft);color:var(--danger);width:100%}.ghost{background:#e9edf0;color:#17212b}
+    .darkBtn{background:#17212b;color:white;width:100%}
+    body.dark .darkBtn{background:#e2e8f0;color:#111827}
+    .danger{background:var(--danger-soft);color:var(--danger);width:100%}
+    .ghost{background:#e9edf0;color:#17212b}
+    body.dark .ghost{background:#263349;color:#f8fafc}
     .btnStack{display:grid;gap:10px;margin-top:12px}.hidden{display:none!important}
     .screenTitle{display:flex;align-items:center;gap:10px;margin:4px 0 10px}.screenTitle h2{margin:0;font-size:27px;letter-spacing:-.4px}
-    .search{width:100%;border:1px solid var(--line);background:white;border-radius:18px;padding:15px;font-size:17px;outline:none;margin:6px 0 10px}
+    .search{width:100%;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:18px;padding:15px;font-size:17px;outline:none;margin:6px 0 10px}
     .itemRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}
     .itemRow:last-child{border-bottom:0}.itemName{font-size:17px;font-weight:900}.itemHint{font-size:13px;color:var(--muted);margin-top:2px}
     .tapHint{font-size:11px;color:var(--green-dark);font-weight:800;margin-top:3px}
     .stepper{display:flex;align-items:center;gap:9px}.round{width:48px;height:48px;border-radius:50%;padding:0;background:#eef2f4;color:#17212b;font-size:29px;line-height:1}
+    body.dark .round{background:#263349;color:#f8fafc}
     .qty{min-width:72px;text-align:center;font-size:20px;font-weight:950}
-    textarea{width:100%;height:300px;border:1px solid var(--line);border-radius:22px;padding:15px;font-size:16px;background:white;line-height:1.4}
+    textarea{width:100%;height:300px;border:1px solid var(--line);border-radius:22px;padding:15px;font-size:16px;background:var(--card);color:var(--text);line-height:1.4}
     .toast{position:fixed;left:16px;right:16px;bottom:18px;background:#17212b;color:white;border-radius:18px;padding:15px;text-align:center;font-weight:900;display:none;z-index:20}
     .empty{text-align:center;color:var(--muted);padding:24px 8px;font-weight:700}.mini{font-size:13px;color:var(--muted);text-align:center;line-height:1.35}
     .version{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
     .modalBg{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:flex-end;z-index:30}
-    .modal{background:white;width:100%;border-radius:26px 26px 0 0;padding:18px;box-shadow:0 -10px 30px rgba(0,0,0,.18)}
+    .modal{background:var(--card);width:100%;border-radius:26px 26px 0 0;padding:18px;box-shadow:0 -10px 30px rgba(0,0,0,.18)}
     .modal h3{margin:0 0 4px;font-size:23px}.modal p{margin:0 0 14px;color:var(--muted)}
-    .modal select,.modal input{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;font-size:17px;margin:8px 0;background:white}
+    .modal select,.modal input{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;font-size:17px;margin:8px 0;background:var(--card);color:var(--text)}
+    .statsGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
+    .stat b{font-size:24px}
   </style>
 </head>
 <body>
@@ -74,13 +88,18 @@
         <div class="progressLine"><span>Progreso de hoy</span><span id="progressText">0 de 7</span></div>
         <div class="bar"><div class="barFill" id="barFill"></div></div>
       </div>
+      <div class="statsGrid">
+        <div class="stat"><div class="mini">Productos marcados</div><b id="totalMarked">0</b></div>
+        <div class="stat"><div class="mini">Proveedores listos</div><b id="totalDone">0</b></div>
+      </div>
       <div id="providerList"></div>
       <div class="btnStack">
-        <button class="dark" onclick="openOrders()">📤 Generar pedidos</button>
+        <button class="primary" onclick="openOrders()">💬 Ver y enviar pedido</button>
+        <button class="darkBtn" onclick="toggleDarkMode()">🌙 Modo oscuro</button>
         <button class="danger" onclick="newDay()">🔄 Empezar nuevo día</button>
       </div>
-      <p class="mini">Cada proveedor tiene su color. Toca un producto para editar unidad.</p>
-      <div class="version">ChefList v5 · colores por proveedor</div>
+      <p class="mini">Toca un producto para editar unidad. En cada proveedor puedes agregar productos nuevos.</p>
+      <div class="version">ChefList v6 · colores, WhatsApp, estadísticas y agregar productos</div>
     </section>
 
     <section id="providerScreen" class="hidden">
@@ -88,7 +107,10 @@
       <div class="screenTitle"><div class="iconBubble" id="providerIcon"></div><h2 id="providerTitle"></h2></div>
       <input class="search" id="searchInput" placeholder="Buscar producto..." oninput="renderItems()">
       <div class="card" id="itemsList"></div>
-      <div class="btnStack"><button class="primary" onclick="saveProvider()">Guardar proveedor ✓</button></div>
+      <div class="btnStack">
+        <button class="darkBtn" onclick="openAddProduct()">➕ Agregar producto</button>
+        <button class="primary" onclick="saveProvider()">Guardar proveedor ✓</button>
+      </div>
     </section>
 
     <section id="ordersScreen" class="hidden">
@@ -96,7 +118,7 @@
       <div class="screenTitle"><div class="iconBubble">💬</div><h2>Pedidos listos</h2></div>
       <textarea id="orderText"></textarea>
       <div class="btnStack">
-        <button class="dark" onclick="copyText()">Copiar para WhatsApp</button>
+        <button class="darkBtn" onclick="copyText()">Copiar para WhatsApp</button>
         <button class="primary" onclick="openWhatsApp()">Abrir WhatsApp</button>
       </div>
     </section>
@@ -119,10 +141,27 @@
     </div>
   </div>
 
+  <div class="modalBg" id="addModal">
+    <div class="modal">
+      <h3>Agregar producto</h3>
+      <p>Se agregará al proveedor actual.</p>
+      <input id="newProductName" placeholder="Nombre del producto">
+      <select id="newProductUnit">
+        <option>kg</option><option>pieza</option><option>caja</option><option>manojo</option><option>litro</option>
+        <option>paquete</option><option>bolsa</option><option>malla</option><option>cartera</option><option>bote</option>
+        <option>charola</option><option>lata</option><option>par</option><option>costal</option><option>rollo</option>
+      </select>
+      <div class="btnStack">
+        <button class="primary" onclick="saveNewProduct()">Agregar</button>
+        <button class="ghost" onclick="closeAddProduct()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
 <script>
-const providers = [
+const baseProviders = [
   {name:"José Verdura", icon:"🥬", color:"#1f9d55", soft:"#eaf8ef", items:[
     ["Aguacate","kg"],["Ajo","kg"],["Arrugula","caja"],["Calabacita","kg"],["Cebolla","kg"],["Cebolla roja","kg"],
     ["Cilantro","manojo"],["Comino","pieza"],["Curry en polvo","pieza"],["Espinaca baby","bolsa"],["Frijoles","kg"],["Huevo","cartera"],
@@ -147,10 +186,14 @@ const providers = [
 
 let current = 0;
 let editing = {pi:0,item:""};
-let state = {qty:{}, done:{}, units:{}};
-try { state = JSON.parse(localStorage.getItem("cheflist_v4")) || state; } catch(e) {}
+let state = {qty:{}, done:{}, units:{}, custom:{}, dark:false};
+try { state = JSON.parse(localStorage.getItem("cheflist_v6")) || state; } catch(e) {}
+if(state.dark) document.body.classList.add("dark");
 
-function save(){ localStorage.setItem("cheflist_v4", JSON.stringify(state)); }
+function providers(){
+  return baseProviders.map((p,i)=>({...p, items:[...p.items, ...(state.custom[i]||[])]}));
+}
+function save(){ localStorage.setItem("cheflist_v6", JSON.stringify(state)); }
 function key(pi,item){ return pi + "___" + item; }
 function unitOf(pi,item,defaultUnit){ return state.units[key(pi,item)] || defaultUnit; }
 function getQty(pi,item){ return state.qty[key(pi,item)] || 0; }
@@ -158,45 +201,56 @@ function setQty(pi,item,val){ state.qty[key(pi,item)] = Math.max(0,val); save();
 function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.style.display="block"; setTimeout(()=>t.style.display="none",1500); }
 function show(screen){ ["homeScreen","providerScreen","ordersScreen"].forEach(id=>document.getElementById(id).classList.add("hidden")); document.getElementById(screen).classList.remove("hidden"); }
 function showHome(){ show("homeScreen"); renderHome(); }
+function toggleDarkMode(){ state.dark=!state.dark; save(); document.body.classList.toggle("dark", state.dark); toast(state.dark ? "Modo oscuro ✓" : "Modo claro ✓"); }
 function renderHome(){
-  const done = providers.filter((p,i)=>state.done[i]).length;
-  document.getElementById("progressText").textContent = done + " de " + providers.length;
-  document.getElementById("barFill").style.width = ((done/providers.length)*100) + "%";
+  const ps=providers();
+  const done = ps.filter((p,i)=>state.done[i]).length;
+  let totalMarked=0;
+  ps.forEach((p,i)=> totalMarked += p.items.filter(item=>getQty(i,item[0])>0).length);
+  document.getElementById("progressText").textContent = done + " de " + ps.length;
+  document.getElementById("barFill").style.width = ((done/ps.length)*100) + "%";
+  document.getElementById("totalMarked").textContent=totalMarked;
+  document.getElementById("totalDone").textContent=done;
   const wrap=document.getElementById("providerList");
   wrap.innerHTML="";
-  providers.forEach((p,i)=>{
+  ps.forEach((p,i)=>{
     const marked = p.items.filter(item=>getQty(i,item[0])>0).length;
+    const percent = Math.round((marked / Math.max(1,p.items.length))*100);
     const div=document.createElement("div");
     div.className="card providerCard" + (state.done[i] ? " done" : "");
     div.style.borderLeftColor = p.color;
     div.style.background = state.done[i] ? p.soft : "var(--card)";
     div.onclick=()=>openProvider(i);
-    div.innerHTML = `<div class="providerLeft"><div class="iconBubble" style="background:${p.soft};color:${p.color}">${p.icon}</div><div><div class="providerName">${p.name}</div><div class="providerSub">${state.done[i] ? "✓ Revisado" : "Pendiente"} · ${marked} productos marcados</div></div></div><div class="arrow" style="color:${p.color}">›</div>`;
+    div.innerHTML = `<div class="providerLeft"><div class="iconBubble" style="background:${p.soft};color:${p.color}">${p.icon}</div><div style="flex:1"><div class="providerName">${p.name}</div><div class="providerSub">${state.done[i] ? "✓ Pedido terminado" : "Pendiente"} · ${marked} productos marcados</div><div class="miniBar"><div class="miniFill" style="width:${percent}%;background:${p.color}"></div></div></div></div><div class="arrow" style="color:${p.color}">›</div>`;
     wrap.appendChild(div);
   });
 }
 function openProvider(i){
+  const ps=providers();
   current=i;
-  document.getElementById("providerIcon").textContent=providers[i].icon;
-  document.getElementById("providerIcon").style.background=providers[i].soft;
-  document.getElementById("providerIcon").style.color=providers[i].color;
-  document.getElementById("providerTitle").textContent=providers[i].name;
-  document.getElementById("providerTitle").style.color=providers[i].color;
+  document.getElementById("providerIcon").textContent=ps[i].icon;
+  document.getElementById("providerIcon").style.background=ps[i].soft;
+  document.getElementById("providerIcon").style.color=ps[i].color;
+  document.getElementById("providerTitle").textContent=ps[i].name;
+  document.getElementById("providerTitle").style.color=ps[i].color;
   document.getElementById("searchInput").value="";
   show("providerScreen");
   renderItems();
 }
 function renderItems(){
+  const ps=providers();
   const q=(document.getElementById("searchInput").value || "").toLowerCase();
   const box=document.getElementById("itemsList");
   box.innerHTML="";
-  const list = providers[current].items.filter(item=>item[0].toLowerCase().includes(q));
+  const list = ps[current].items.filter(item=>item[0].toLowerCase().includes(q));
   if(list.length===0){ box.innerHTML='<div class="empty">No encontré ese producto.</div>'; return; }
   list.forEach(([item,defaultUnit])=>{
     const unit = unitOf(current,item,defaultUnit);
+    const safeItem=item.replace(/'/g,"\\'");
+    const safeUnit=unit.replace(/'/g,"\\'");
     const row=document.createElement("div");
     row.className="itemRow";
-    row.innerHTML=`<div onclick="openUnitModal(current,'${item.replace(/'/g,"\\'")}', '${unit.replace(/'/g,"\\'")}')"><div class="itemName">${item}</div><div class="itemHint">Unidad: ${unit}</div><div class="tapHint">Toca para editar unidad</div></div>
+    row.innerHTML=`<div onclick="openUnitModal(current,'${safeItem}', '${safeUnit}')"><div class="itemName">${item}</div><div class="itemHint">Unidad: ${unit}</div><div class="tapHint">Toca para editar unidad</div></div>
     <div class="stepper"><button class="round">−</button><div class="qty">${getQty(current,item)} ${unit}</div><button class="round">+</button></div>`;
     const btns=row.querySelectorAll("button");
     btns[0].onclick=(e)=>{e.stopPropagation(); setQty(current,item,getQty(current,item)-1);};
@@ -232,16 +286,31 @@ function saveUnit(){
   renderItems();
   toast("Unidad guardada ✓");
 }
-function saveProvider(){ state.done[current]=true; save(); toast(providers[current].name + " revisado ✓"); setTimeout(showHome,450); }
+function openAddProduct(){ document.getElementById("newProductName").value=""; document.getElementById("newProductUnit").value="kg"; document.getElementById("addModal").style.display="flex"; }
+function closeAddProduct(){ document.getElementById("addModal").style.display="none"; }
+function saveNewProduct(){
+  const name=document.getElementById("newProductName").value.trim();
+  const unit=document.getElementById("newProductUnit").value;
+  if(!name){ toast("Escribe el producto"); return; }
+  if(!state.custom[current]) state.custom[current]=[];
+  state.custom[current].push([name,unit]);
+  save();
+  closeAddProduct();
+  renderItems();
+  renderHome();
+  toast("Producto agregado ✓");
+}
+function saveProvider(){ state.done[current]=true; save(); toast(providers()[current].name + " terminado ✓"); setTimeout(showHome,450); }
 function makeOrders(){
+  const ps=providers();
   const blocks=[];
   let total=0;
-  providers.forEach((p,i)=>{
+  ps.forEach((p,i)=>{
     const lines=p.items.filter(([item,unit])=>getQty(i,item)>0).map(([item,defaultUnit])=>{
       total++;
-      return "• " + item + " ........ " + getQty(i,item) + " " + unitOf(i,item,defaultUnit);
+      return "✓ " + item + " ........ " + getQty(i,item) + " " + unitOf(i,item,defaultUnit);
     });
-    if(lines.length>0){ blocks.push("🛒 PEDIDO " + p.name.toUpperCase() + "\n\n" + lines.join("\n")); }
+    if(lines.length>0){ blocks.push(p.icon + " " + p.name.toUpperCase() + "\n\n" + lines.join("\n")); }
   });
   if(blocks.length===0) return "Todavía no hay productos marcados.";
   return "📦 ChefList\nPedido de cocina\nTotal: " + total + " productos\n\n" + blocks.join("\n\n----------------------\n\n") + "\n\nGracias 😊";
@@ -249,7 +318,7 @@ function makeOrders(){
 function openOrders(){ show("ordersScreen"); document.getElementById("orderText").value=makeOrders(); }
 function copyText(){ const t=document.getElementById("orderText"); t.select(); t.setSelectionRange(0,99999); try{ document.execCommand("copy"); toast("Pedido copiado ✓"); } catch(e){ toast("Selecciona y copia manualmente"); } }
 function openWhatsApp(){ const msg=encodeURIComponent(document.getElementById("orderText").value || makeOrders()); window.location.href="https://wa.me/?text="+msg; }
-function newDay(){ if(confirm("¿Borrar cantidades y palomitas para empezar un nuevo día? Las unidades editadas se conservan.")){ state.qty={}; state.done={}; save(); renderHome(); toast("Nuevo día listo ✓"); } }
+function newDay(){ if(confirm("¿Borrar cantidades y palomitas para empezar un nuevo día? Las unidades y productos agregados se conservan.")){ state.qty={}; state.done={}; save(); renderHome(); toast("Nuevo día listo ✓"); } }
 document.getElementById("dateText").textContent = new Date().toLocaleDateString("es-MX",{weekday:"short",day:"numeric",month:"short"});
 renderHome();
 </script>
