@@ -70,26 +70,36 @@ textarea{width:100%;height:300px;border:1px solid var(--line);border-radius:22px
 .modal p{margin:0 0 14px;color:var(--muted)}
 .modal select,.modal input{width:100%;border:1px solid var(--line);border-radius:16px;padding:14px;font-size:17px;margin:8px 0;background:var(--card);color:var(--text)}
 
+
 .splash{
-position:fixed;inset:0;z-index:50;background:linear-gradient(145deg,#1f9d55,#8ccf4a);
+position:fixed;inset:0;z-index:50;background:
+radial-gradient(circle at 20% 15%,rgba(255,255,255,.28),transparent 28%),
+linear-gradient(145deg,#13723d,#1f9d55 55%,#8ccf4a);
 display:none;align-items:center;justify-content:center;text-align:center;color:white;padding:28px;
 }
-.splashInner{max-width:360px;width:100%}
+.splashInner{max-width:390px;width:100%}
 .splashLogo{
-width:104px;height:104px;margin:0 auto 18px;border-radius:30px;background:white;color:#1f9d55;
-display:flex;align-items:center;justify-content:center;font-size:54px;box-shadow:0 18px 45px rgba(0,0,0,.20);
+width:112px;height:112px;margin:0 auto 18px;border-radius:34px;background:white;color:#1f9d55;
+display:flex;align-items:center;justify-content:center;font-size:58px;box-shadow:0 18px 45px rgba(0,0,0,.22);
 animation:bounceIn .7s ease both;
 }
-.splash h2{font-size:42px;margin:0;font-weight:950;letter-spacing:-1px}
-.splash p{font-size:18px;opacity:.96;line-height:1.35;margin:10px 0 24px}
+.splash h2{font-size:46px;margin:0;font-weight:950;letter-spacing:-1.2px}
+.splash p{font-size:18px;opacity:.96;line-height:1.35;margin:10px 0 18px}
+.kitchenCard{
+background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);border-radius:26px;
+padding:15px;margin:18px 0 22px;backdrop-filter:blur(8px);box-shadow:0 12px 30px rgba(0,0,0,.12);
+}
+.kitchenIcons{font-size:30px;letter-spacing:4px;margin-bottom:8px}
+.kitchenText{font-size:14px;opacity:.94;font-weight:800}
 .startBtn{
-width:100%;background:white;color:#13723d;border:0;border-radius:22px;padding:17px 20px;
-font-size:19px;font-weight:950;box-shadow:0 12px 30px rgba(0,0,0,.16);
+width:100%;background:white;color:#13723d;border:0;border-radius:22px;padding:18px 20px;
+font-size:20px;font-weight:950;box-shadow:0 12px 30px rgba(0,0,0,.18);
 animation:softGlow 1.8s ease-in-out infinite alternate;
 }
-.splashSmall{font-size:12px;opacity:.85;margin-top:14px}
+.splashSmall{font-size:12px;opacity:.88;margin-top:14px}
 @keyframes bounceIn{0%{transform:scale(.75);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
 @keyframes softGlow{from{transform:translateY(0)}to{transform:translateY(-2px)}}
+to{transform:translateY(-2px)}}
 
 </style>
 </head>
@@ -100,9 +110,14 @@ animation:softGlow 1.8s ease-in-out infinite alternate;
     <div class="splashLogo">📦</div>
     <h2>ChefList</h2>
     <p id="splashGreeting">Organiza tus pedidos en menos tiempo.</p>
+    <div class="kitchenCard">
+      <div class="kitchenIcons">🥬 🛒 🥩 🧀</div>
+      <div class="kitchenText">Revisa proveedores, marca cantidades y envía por WhatsApp.</div>
+    </div>
     <button class="startBtn" onclick="startToday()">🚀 Comenzar pedido</button>
-    <div class="splashSmall">Versión 1.0 · Pedidos de cocina</div>
+    <div class="splashSmall" id="splashDate">Versión 1.0 · Pedidos de cocina</div>
   </div>
+</div>
 </div>
 
 <header>
@@ -354,14 +369,12 @@ function hourGreeting(){
   return "🌙 Buenas noches";
 }
 function showSplashIfNeeded(){
-  const seen=localStorage.getItem("cheflist_seen_day");
   document.getElementById("splashGreeting").textContent = hourGreeting() + ". Organiza tus pedidos en menos tiempo.";
-  if(seen!==todayKey()){
-    document.getElementById("splash").style.display="flex";
-  }
+  document.getElementById("splashDate").textContent = new Date().toLocaleDateString("es-MX",{weekday:"long",day:"numeric",month:"long"}) + " · ChefList";
+  document.getElementById("splash").style.display="flex";
+}
 }
 function startToday(){
-  localStorage.setItem("cheflist_seen_day", todayKey());
   document.getElementById("splash").style.display="none";
 }
 
