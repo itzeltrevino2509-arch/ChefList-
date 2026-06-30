@@ -53,10 +53,7 @@
     .screenTitle{display:flex;align-items:center;gap:10px;margin:4px 0 10px}.screenTitle h2{margin:0;font-size:27px;letter-spacing:-.4px}
     .search{width:100%;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:18px;padding:15px;font-size:17px;outline:none;margin:6px 0 10px}
     .itemRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}
-    .itemRow.shortage{background:rgba(220,38,38,.08);margin:0 -8px;padding:15px 8px;border-radius:18px;border-bottom:1px solid rgba(220,38,38,.18)}
-    .shortageBadge{display:inline-block;background:#dc2626;color:white;border-radius:999px;padding:4px 9px;font-size:11px;font-weight:950;margin-top:6px}
-    .shortageBtn{background:#fee2e2;color:#991b1b;border-radius:14px;padding:9px 11px;font-size:13px;font-weight:900;margin-top:7px}
-    body.dark .shortageBtn{background:#3b1e1e;color:#fecaca}
+    
     .itemRow:last-child{border-bottom:0}.itemName{font-size:17px;font-weight:900}.itemHint{font-size:13px;color:var(--muted);margin-top:2px}
     .tapHint{font-size:11px;color:var(--green-dark);font-weight:800;margin-top:3px}
     .stepper{display:flex;align-items:center;gap:9px}.round{width:48px;height:48px;border-radius:50%;padding:0;background:#eef2f4;color:#17212b;font-size:29px;line-height:1}
@@ -262,15 +259,15 @@ function renderItems(){
   box.innerHTML="";
   const list = ps[current].items
     .filter(item=>item[0].toLowerCase().includes(q))
-    .sort((a,b)=> (isShortage(current,b[0])?1:0) - (isShortage(current,a[0])?1:0));
+    ;
   if(list.length===0){ box.innerHTML='<div class="empty">No encontré ese producto.</div>'; return; }
   list.forEach(([item,defaultUnit])=>{
     const unit = unitOf(current,item,defaultUnit);
     const safeItem=item.replace(/'/g,"\\'");
     const safeUnit=unit.replace(/'/g,"\\'");
     const row=document.createElement("div");
-    row.className="itemRow" + (isShortage(current,item) ? " shortage" : "");
-    row.innerHTML=`<div onclick="openUnitModal(current,'${safeItem}', '${safeUnit}')"><div class="itemName">${isShortage(current,item) ? "🔴 " : ""}${item}</div><div class="itemHint">Unidad: ${unit}</div>${isShortage(current,item) ? '<div class="shortageBadge">AGOTADO / FALTANTE</div>' : ''}<div class="tapHint">Toca para editar unidad</div><button class="shortageBtn">${isShortage(current,item) ? "Quitar faltante" : "🚨 Marcar faltante"}</button></div>
+    row.className="itemRow";
+    row.innerHTML=`<div onclick="openUnitModal(current,'${safeItem}', '${safeUnit}')"><div class="itemName">${item}</div><div class="itemHint">Unidad: ${unit}</div><div class="tapHint">Toca para editar unidad</div></div>
     <div class="stepper"><button class="round">−</button><div class="qty">${getQty(current,item)} ${unit}</div><button class="round">+</button></div>`;
     const btns=row.querySelectorAll("button");
     btns[0].onclick=(e)=>{e.stopPropagation(); toggleShortage(current,item);};
