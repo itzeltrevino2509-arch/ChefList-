@@ -30,7 +30,9 @@
     .progressLine{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:950}
     .progressLine span:last-child{color:var(--green-dark)}
     .bar{height:14px;background:#dce4df;border-radius:99px;overflow:hidden}.barFill{height:100%;width:0%;background:var(--green);border-radius:99px;transition:.25s}
-    .providerCard{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer}
+    .providerCard{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;border-left:10px solid var(--green)}
+    .providerCard .iconBubble{background:rgba(255,255,255,.65)}
+    .providerHeader{height:8px;border-radius:999px;margin:-4px 0 10px}
     .providerLeft{display:flex;align-items:center;gap:13px}.iconBubble{width:48px;height:48px;border-radius:16px;background:var(--green-soft);display:flex;align-items:center;justify-content:center;font-size:25px}
     .providerName{font-size:20px;font-weight:950}.providerSub{font-size:14px;color:var(--muted);margin-top:2px}.arrow{font-size:30px;color:#a2acb5}
     .done{background:#f4fff7;border-color:#bde8c9}.done .providerSub{color:#128447;font-weight:800}
@@ -77,8 +79,8 @@
         <button class="dark" onclick="openOrders()">📤 Generar pedidos</button>
         <button class="danger" onclick="newDay()">🔄 Empezar nuevo día</button>
       </div>
-      <p class="mini">Toca el nombre de un producto para cambiar su unidad.</p>
-      <div class="version">ChefList v4 · unidades editables + WhatsApp bonito</div>
+      <p class="mini">Cada proveedor tiene su color. Toca un producto para editar unidad.</p>
+      <div class="version">ChefList v5 · colores por proveedor</div>
     </section>
 
     <section id="providerScreen" class="hidden">
@@ -121,7 +123,7 @@
 
 <script>
 const providers = [
-  {name:"José Verdura", icon:"🥬", items:[
+  {name:"José Verdura", icon:"🥬", color:"#1f9d55", soft:"#eaf8ef", items:[
     ["Aguacate","kg"],["Ajo","kg"],["Arrugula","caja"],["Calabacita","kg"],["Cebolla","kg"],["Cebolla roja","kg"],
     ["Cilantro","manojo"],["Comino","pieza"],["Curry en polvo","pieza"],["Espinaca baby","bolsa"],["Frijoles","kg"],["Huevo","cartera"],
     ["Jalapeño","kg"],["Limon","kg"],["Manzana granny smith","kg"],["Mix lechuga","bolsa"],["Nuez pecana","kg"],
@@ -130,17 +132,17 @@ const providers = [
     ["Zanahoria","kg"],["Perejil liso","manojo"],["Piña","pieza"],["Fresa","kg"],["Melon","pieza"],["Mango","kg"],["Uva","kg"],
     ["Garbanzo","kg"],["Tortillas blancas","paquete"],["Papa frita","bolsa"],["Granola","kg"],["Lechuga orejona","pieza"],["Arandano deshidratados","kg"]
   ]},
-  {name:"Sam's", icon:"🛒", items:[
+  {name:"Sam's", icon:"🛒", color:"#2563eb", soft:"#eff6ff", items:[
     ["Aceite oliva","pieza"],["Aceituna negras cortadas","lata"],["Aderezo cesar","pieza"],["Aderezo ranch","pieza"],["Arroz","bolsa"],
     ["Atun en lata","lata"],["Chipotle","lata"],["Elote lata","lata"],["Fusilli","paquete"],["Mayonesa","pieza"],["Mozzarella fresca","pieza"],
     ["Pasta lasagna barrila laminas","paquete"],["Pesto","pieza"],["Queso feta","pieza"],["Sal","pieza"],["Tomate deshidratado","pieza"],
     ["Toptopos","bolsa"],["Chiles en vinagre","lata"],["Yogurt griego","pieza"],["Queso philadelphia","pieza"]
   ]},
-  {name:"San Juan", icon:"🥩", items:[["Molida res 80/20","kg"],["Bistec sin hueso 125-130gr","kg"],["Hamburguesas 150gr pieza","pieza"]]},
-  {name:"Laben", icon:"🧀", items:[["Mozzarella rallada","kg"],["Parmesano rallado","kg"],["Parmesano rasurado","kg"],["Tomate triturado","pieza"],["Monterrey jack rebanado","kg"],["Queso cheddar rebanado","kg"],["Queso panela","kg"],["Mantequilla","pieza"]]},
-  {name:"Piome", icon:"🍗", items:[["Pechuga pollo","kg"]]},
-  {name:"Bernabé", icon:"🥓", items:[["Jamon pavo","kg"],["Jamón Serrano","kg"],["Mortadella","kg"],["Tocino rebanado","kg"]]},
-  {name:"Houseclean", icon:"🧽", items:[["Bolsas de basura","paquete"],["Limpiavidrios","pieza"],["Lavaloza","pieza"],["Fabuloso","pieza"],["Papel secante","paquete"],["Guantes","par"],["Esponjas","pieza"],["Fibras","pieza"],["Cloro","pieza"]]}
+  {name:"San Juan", icon:"🥩", color:"#dc2626", soft:"#fef2f2", items:[["Molida res 80/20","kg"],["Bistec sin hueso 125-130gr","kg"],["Hamburguesas 150gr pieza","pieza"]]},
+  {name:"Laben", icon:"🧀", color:"#ca8a04", soft:"#fefce8", items:[["Mozzarella rallada","kg"],["Parmesano rallado","kg"],["Parmesano rasurado","kg"],["Tomate triturado","pieza"],["Monterrey jack rebanado","kg"],["Queso cheddar rebanado","kg"],["Queso panela","kg"],["Mantequilla","pieza"]]},
+  {name:"Piome", icon:"🍗", color:"#ea580c", soft:"#fff7ed", items:[["Pechuga pollo","kg"]]},
+  {name:"Bernabé", icon:"🥓", color:"#db2777", soft:"#fdf2f8", items:[["Jamon pavo","kg"],["Jamón Serrano","kg"],["Mortadella","kg"],["Tocino rebanado","kg"]]},
+  {name:"Houseclean", icon:"🧽", color:"#7c3aed", soft:"#f5f3ff", items:[["Bolsas de basura","paquete"],["Limpiavidrios","pieza"],["Lavaloza","pieza"],["Fabuloso","pieza"],["Papel secante","paquete"],["Guantes","par"],["Esponjas","pieza"],["Fibras","pieza"],["Cloro","pieza"]]}
 ];
 
 let current = 0;
@@ -166,15 +168,20 @@ function renderHome(){
     const marked = p.items.filter(item=>getQty(i,item[0])>0).length;
     const div=document.createElement("div");
     div.className="card providerCard" + (state.done[i] ? " done" : "");
+    div.style.borderLeftColor = p.color;
+    div.style.background = state.done[i] ? p.soft : "var(--card)";
     div.onclick=()=>openProvider(i);
-    div.innerHTML = `<div class="providerLeft"><div class="iconBubble">${p.icon}</div><div><div class="providerName">${p.name}</div><div class="providerSub">${state.done[i] ? "✓ Revisado" : "Pendiente"} · ${marked} productos marcados</div></div></div><div class="arrow">›</div>`;
+    div.innerHTML = `<div class="providerLeft"><div class="iconBubble" style="background:${p.soft};color:${p.color}">${p.icon}</div><div><div class="providerName">${p.name}</div><div class="providerSub">${state.done[i] ? "✓ Revisado" : "Pendiente"} · ${marked} productos marcados</div></div></div><div class="arrow" style="color:${p.color}">›</div>`;
     wrap.appendChild(div);
   });
 }
 function openProvider(i){
   current=i;
   document.getElementById("providerIcon").textContent=providers[i].icon;
+  document.getElementById("providerIcon").style.background=providers[i].soft;
+  document.getElementById("providerIcon").style.color=providers[i].color;
   document.getElementById("providerTitle").textContent=providers[i].name;
+  document.getElementById("providerTitle").style.color=providers[i].color;
   document.getElementById("searchInput").value="";
   show("providerScreen");
   renderItems();
