@@ -53,6 +53,10 @@
     .screenTitle{display:flex;align-items:center;gap:10px;margin:4px 0 10px}.screenTitle h2{margin:0;font-size:27px;letter-spacing:-.4px}
     .search{width:100%;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:18px;padding:15px;font-size:17px;outline:none;margin:6px 0 10px}
     .itemRow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}
+    .itemRow.shortage{background:rgba(220,38,38,.08);margin:0 -8px;padding:15px 8px;border-radius:18px;border-bottom:1px solid rgba(220,38,38,.18)}
+    .shortageBadge{display:inline-block;background:#dc2626;color:white;border-radius:999px;padding:4px 9px;font-size:11px;font-weight:950;margin-top:6px}
+    .shortageBtn{background:#fee2e2;color:#991b1b;border-radius:14px;padding:9px 11px;font-size:13px;font-weight:900;margin-top:7px}
+    body.dark .shortageBtn{background:#3b1e1e;color:#fecaca}
     .itemRow:last-child{border-bottom:0}.itemName{font-size:17px;font-weight:900}.itemHint{font-size:13px;color:var(--muted);margin-top:2px}
     .tapHint{font-size:11px;color:var(--green-dark);font-weight:800;margin-top:3px}
     .stepper{display:flex;align-items:center;gap:9px}.round{width:48px;height:48px;border-radius:50%;padding:0;background:#eef2f4;color:#17212b;font-size:29px;line-height:1}
@@ -90,8 +94,9 @@
       </div>
       <div class="statsGrid">
         <div class="stat"><div class="mini">Productos marcados</div><b id="totalMarked">0</b></div>
-        <div class="stat"><div class="mini">Proveedores listos</div><b id="totalDone">0</b></div>
+        <div class="stat"><div class="mini">Faltantes 🔴</div><b id="totalShortages">0</b></div>
       </div>
+      <div id="shortageBoard"></div>
       <div id="providerList"></div>
       <div class="btnStack">
         <button class="primary" onclick="openOrders()">💬 Ver y enviar pedido</button>
@@ -99,7 +104,7 @@
         <button class="danger" onclick="newDay()">🔄 Empezar nuevo día</button>
       </div>
       <p class="mini">Toca un producto para editar unidad. En cada proveedor puedes agregar productos nuevos.</p>
-      <div class="version">ChefList v6 · colores, WhatsApp, estadísticas y agregar productos</div>
+      <div class="version">ChefList v7 · faltantes en rojo</div>
     </section>
 
     <section id="providerScreen" class="hidden">
@@ -186,7 +191,7 @@ const baseProviders = [
 
 let current = 0;
 let editing = {pi:0,item:""};
-let state = {qty:{}, done:{}, units:{}, custom:{}, dark:false};
+let state = {qty:{}, done:{}, units:{}, custom:{}, shortage:{}, dark:false};
 try { state = JSON.parse(localStorage.getItem("cheflist_v6")) || state; } catch(e) {}
 if(state.dark) document.body.classList.add("dark");
 
@@ -197,6 +202,16 @@ function save(){ localStorage.setItem("cheflist_v6", JSON.stringify(state)); }
 function key(pi,item){ return pi + "___" + item; }
 function unitOf(pi,item,defaultUnit){ return state.units[key(pi,item)] || defaultUnit; }
 function getQty(pi,item){ return state.qty[key(pi,item)] || 0; }
+function isShortage(pi,item){ return !!state.shortage?.[key(pi,item)]; }
+function toggleShortage(pi,item){
+  if(!state.shortage) state.shortage={};
+  const k=key(pi,item);
+  state.shortage[k]=!state.shortage[k];
+  save();
+  renderItems();
+  renderHome();
+  toast(state.shortage[k] ? "Marcado como faltante 🔴" : "Faltante quitado ✓");
+}
 function setQty(pi,item,val){ state.qty[key(pi,item)] = Math.max(0,val); save(); renderItems(); renderHome(); }
 function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.style.display="block"; setTimeout(()=>t.style.display="none",1500); }
 function show(screen){ ["homeScreen","providerScreen","ordersScreen"].forEach(id=>document.getElementById(id).classList.add("hidden")); document.getElementById(screen).classList.remove("hidden"); }
@@ -206,22 +221,35 @@ function renderHome(){
   const ps=providers();
   const done = ps.filter((p,i)=>state.done[i]).length;
   let totalMarked=0;
-  ps.forEach((p,i)=> totalMarked += p.items.filter(item=>getQty(i,item[0])>0).length);
+  let shortageList=[];
+  ps.forEach((p,i)=> {
+    totalMarked += p.items.filter(item=>getQty(i,item[0])>0).length;
+    p.items.forEach(([item,unit])=>{
+      if(isShortage(i,item)) shortageList.push({provider:p.name, icon:p.icon, color:p.color, item, unit:unitOf(i,item,unit)});
+    });
+  });
   document.getElementById("progressText").textContent = done + " de " + ps.length;
   document.getElementById("barFill").style.width = ((done/ps.length)*100) + "%";
   document.getElementById("totalMarked").textContent=totalMarked;
-  document.getElementById("totalDone").textContent=done;
+  document.getElementById("totalShortages").textContent=shortageList.length;
+  const board=document.getElementById("shortageBoard");
+  if(shortageList.length){
+    board.innerHTML = `<div class="card" style="border-left:10px solid #dc2626;background:rgba(220,38,38,.06)"><b>🚨 Pizarrón de faltantes</b><div class="mini" style="text-align:left;margin-top:6px">${shortageList.map(s=>`${s.icon} ${s.item} · ${s.provider}`).join("<br>")}</div></div>`;
+  } else {
+    board.innerHTML = "";
+  }
   const wrap=document.getElementById("providerList");
   wrap.innerHTML="";
   ps.forEach((p,i)=>{
     const marked = p.items.filter(item=>getQty(i,item[0])>0).length;
+    const shortages = p.items.filter(item=>isShortage(i,item[0])).length;
     const percent = Math.round((marked / Math.max(1,p.items.length))*100);
     const div=document.createElement("div");
     div.className="card providerCard" + (state.done[i] ? " done" : "");
     div.style.borderLeftColor = p.color;
     div.style.background = state.done[i] ? p.soft : "var(--card)";
     div.onclick=()=>openProvider(i);
-    div.innerHTML = `<div class="providerLeft"><div class="iconBubble" style="background:${p.soft};color:${p.color}">${p.icon}</div><div style="flex:1"><div class="providerName">${p.name}</div><div class="providerSub">${state.done[i] ? "✓ Pedido terminado" : "Pendiente"} · ${marked} productos marcados</div><div class="miniBar"><div class="miniFill" style="width:${percent}%;background:${p.color}"></div></div></div></div><div class="arrow" style="color:${p.color}">›</div>`;
+    div.innerHTML = `<div class="providerLeft"><div class="iconBubble" style="background:${p.soft};color:${p.color}">${p.icon}</div><div style="flex:1"><div class="providerName">${p.name}</div><div class="providerSub">${state.done[i] ? "✓ Pedido terminado" : "Pendiente"} · ${marked} marcados${shortages ? " · 🔴 " + shortages + " faltantes" : ""}</div><div class="miniBar"><div class="miniFill" style="width:${percent}%;background:${p.color}"></div></div></div></div><div class="arrow" style="color:${p.color}">›</div>`;
     wrap.appendChild(div);
   });
 }
@@ -242,19 +270,22 @@ function renderItems(){
   const q=(document.getElementById("searchInput").value || "").toLowerCase();
   const box=document.getElementById("itemsList");
   box.innerHTML="";
-  const list = ps[current].items.filter(item=>item[0].toLowerCase().includes(q));
+  const list = ps[current].items
+    .filter(item=>item[0].toLowerCase().includes(q))
+    .sort((a,b)=> (isShortage(current,b[0])?1:0) - (isShortage(current,a[0])?1:0));
   if(list.length===0){ box.innerHTML='<div class="empty">No encontré ese producto.</div>'; return; }
   list.forEach(([item,defaultUnit])=>{
     const unit = unitOf(current,item,defaultUnit);
     const safeItem=item.replace(/'/g,"\\'");
     const safeUnit=unit.replace(/'/g,"\\'");
     const row=document.createElement("div");
-    row.className="itemRow";
-    row.innerHTML=`<div onclick="openUnitModal(current,'${safeItem}', '${safeUnit}')"><div class="itemName">${item}</div><div class="itemHint">Unidad: ${unit}</div><div class="tapHint">Toca para editar unidad</div></div>
+    row.className="itemRow" + (isShortage(current,item) ? " shortage" : "");
+    row.innerHTML=`<div onclick="openUnitModal(current,'${safeItem}', '${safeUnit}')"><div class="itemName">${isShortage(current,item) ? "🔴 " : ""}${item}</div><div class="itemHint">Unidad: ${unit}</div>${isShortage(current,item) ? '<div class="shortageBadge">AGOTADO / FALTANTE</div>' : ''}<div class="tapHint">Toca para editar unidad</div><button class="shortageBtn">${isShortage(current,item) ? "Quitar faltante" : "🚨 Marcar faltante"}</button></div>
     <div class="stepper"><button class="round">−</button><div class="qty">${getQty(current,item)} ${unit}</div><button class="round">+</button></div>`;
     const btns=row.querySelectorAll("button");
-    btns[0].onclick=(e)=>{e.stopPropagation(); setQty(current,item,getQty(current,item)-1);};
-    btns[1].onclick=(e)=>{e.stopPropagation(); setQty(current,item,getQty(current,item)+1);};
+    btns[0].onclick=(e)=>{e.stopPropagation(); toggleShortage(current,item);};
+    btns[1].onclick=(e)=>{e.stopPropagation(); setQty(current,item,getQty(current,item)-1);};
+    btns[2].onclick=(e)=>{e.stopPropagation(); setQty(current,item,getQty(current,item)+1);};
     box.appendChild(row);
   });
 }
@@ -306,9 +337,12 @@ function makeOrders(){
   const blocks=[];
   let total=0;
   ps.forEach((p,i)=>{
-    const lines=p.items.filter(([item,unit])=>getQty(i,item)>0).map(([item,defaultUnit])=>{
+    const lines=p.items.filter(([item,unit])=>getQty(i,item)>0 || isShortage(i,item)).map(([item,defaultUnit])=>{
       total++;
-      return "✓ " + item + " ........ " + getQty(i,item) + " " + unitOf(i,item,defaultUnit);
+      const unit=unitOf(i,item,defaultUnit);
+      if(isShortage(i,item) && getQty(i,item)===0) return "🚨 " + item + " ........ FALTANTE (" + unit + ")";
+      if(isShortage(i,item)) return "🚨 " + item + " ........ " + getQty(i,item) + " " + unit;
+      return "✓ " + item + " ........ " + getQty(i,item) + " " + unit;
     });
     if(lines.length>0){ blocks.push(p.icon + " " + p.name.toUpperCase() + "\n\n" + lines.join("\n")); }
   });
@@ -318,7 +352,7 @@ function makeOrders(){
 function openOrders(){ show("ordersScreen"); document.getElementById("orderText").value=makeOrders(); }
 function copyText(){ const t=document.getElementById("orderText"); t.select(); t.setSelectionRange(0,99999); try{ document.execCommand("copy"); toast("Pedido copiado ✓"); } catch(e){ toast("Selecciona y copia manualmente"); } }
 function openWhatsApp(){ const msg=encodeURIComponent(document.getElementById("orderText").value || makeOrders()); window.location.href="https://wa.me/?text="+msg; }
-function newDay(){ if(confirm("¿Borrar cantidades y palomitas para empezar un nuevo día? Las unidades y productos agregados se conservan.")){ state.qty={}; state.done={}; save(); renderHome(); toast("Nuevo día listo ✓"); } }
+function newDay(){ if(confirm("¿Borrar cantidades y palomitas para empezar un nuevo día? Las unidades, productos agregados y faltantes se conservan.")){ state.qty={}; state.done={}; save(); renderHome(); toast("Nuevo día listo ✓"); } }
 document.getElementById("dateText").textContent = new Date().toLocaleDateString("es-MX",{weekday:"short",day:"numeric",month:"short"});
 renderHome();
 </script>
