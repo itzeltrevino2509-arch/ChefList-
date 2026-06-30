@@ -92,11 +92,7 @@
         <div class="progressLine"><span>Progreso de hoy</span><span id="progressText">0 de 7</span></div>
         <div class="bar"><div class="barFill" id="barFill"></div></div>
       </div>
-      <div class="statsGrid">
-        <div class="stat"><div class="mini">Productos marcados</div><b id="totalMarked">0</b></div>
-        <div class="stat"><div class="mini">Faltantes 🔴</div><b id="totalShortages">0</b></div>
-      </div>
-      <div id="shortageBoard"></div>
+      
       <div id="providerList"></div>
       <div class="btnStack">
         <button class="primary" onclick="openOrders()">💬 Ver y enviar pedido</button>
@@ -104,7 +100,7 @@
         <button class="danger" onclick="newDay()">🔄 Empezar nuevo día</button>
       </div>
       <p class="mini">Toca un producto para editar unidad. En cada proveedor puedes agregar productos nuevos.</p>
-      <div class="version">ChefList v7 · faltantes en rojo</div>
+      <div class="version">ChefList v6 simplificada</div>
     </section>
 
     <section id="providerScreen" class="hidden">
@@ -230,14 +226,8 @@ function renderHome(){
   });
   document.getElementById("progressText").textContent = done + " de " + ps.length;
   document.getElementById("barFill").style.width = ((done/ps.length)*100) + "%";
-  document.getElementById("totalMarked").textContent=totalMarked;
-  document.getElementById("totalShortages").textContent=shortageList.length;
-  const board=document.getElementById("shortageBoard");
-  if(shortageList.length){
-    board.innerHTML = `<div class="card" style="border-left:10px solid #dc2626;background:rgba(220,38,38,.06)"><b>🚨 Pizarrón de faltantes</b><div class="mini" style="text-align:left;margin-top:6px">${shortageList.map(s=>`${s.icon} ${s.item} · ${s.provider}`).join("<br>")}</div></div>`;
-  } else {
-    board.innerHTML = "";
-  }
+  
+  
   const wrap=document.getElementById("providerList");
   wrap.innerHTML="";
   ps.forEach((p,i)=>{
